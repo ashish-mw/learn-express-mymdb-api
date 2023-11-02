@@ -6,35 +6,18 @@ const config = require("./config");
 const express = require("express");
 const morgan = require("morgan");
 
-const { validate } = require("./middlewares/validate.middleware");
 const { notfound } = require("./middlewares/notfound.middleware");
 const { errorHandler } = require("./middlewares/errorhandler.middleware");
 
-const { movieSchema } = require("./validations/movie.schema");
-
-const {
-  getAllMoviesController,
-  addMovieController,
-  updateMovieController,
-  deleteMovieController,
-} = require("./controllers/movie.controller");
+const movieRouter = require("./routes/movie.routes");
 
 const app = express();
 
 app.use(express.json());
 app.use(morgan("dev"));
 
-// READ
-app.get("/movies", getAllMoviesController);
-
-// CREATE
-app.post("/movies", validate(movieSchema), addMovieController);
-
-// UPDATE
-app.put("/movies/:id", validate(movieSchema), updateMovieController);
-
-// DELETE
-app.delete("/movies/:id", deleteMovieController);
+// movie routes
+app.use("/movies", movieRouter);
 
 // 404 handler
 app.use(notfound);
