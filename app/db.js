@@ -1,12 +1,11 @@
-const movies = [
-  { id: 123456, title: "The Matrix", year: 1998 },
-  { id: 123457, title: "The Matrix Reloaded", year: 2001 },
-];
+const { v4: uuidv4 } = require("uuid");
+
+const movies = [];
 
 const getAllMovies = () => movies;
 
 const addMovie = ({ title, year }) => {
-  const id = new Date().getTime();
+  const id = uuidv4();
   const m = {
     id,
     title,
