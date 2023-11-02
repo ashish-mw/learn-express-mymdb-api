@@ -16,7 +16,20 @@ const addMovie = ({ title, year }) => {
   return m;
 };
 
+const updateMovie = ({ id, payload }) => {
+  const idx = movies.findIndex((m) => m.id == id);
+  if (idx === -1) {
+    return null;
+  }
+
+  movies[idx]["title"] = payload["title"];
+  movies[idx]["year"] = payload["year"];
+
+  return movies[idx];
+};
+
 module.exports = {
   getAllMovies,
   addMovie,
+  updateMovie,
 };

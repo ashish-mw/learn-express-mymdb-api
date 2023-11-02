@@ -6,9 +6,17 @@ const config = require("./config");
 const express = require("express");
 const morgan = require("morgan");
 
-const Joi = require("joi");
+const { validate } = require("./middlewares/validate.middleware");
+const { notfound } = require("./middlewares/notfound.middleware");
+const { errorHandler } = require("./middlewares/errorhandler.middleware");
 
-const { getAllMovies, addMovie } = require("./db");
+const { movieSchema } = require("./validations/movie.schema");
+
+const {
+  getAllMoviesController,
+  addMovieController,
+  updateMovieController,
+} = require("./controllers/movie.controller");
 
 const app = express();
 
@@ -16,29 +24,19 @@ app.use(express.json());
 app.use(morgan("dev"));
 
 // READ
-app.get("/movies", (req, res) => {
-  const movies = getAllMovies();
-  res.send(movies);
-});
+app.get("/movies", getAllMoviesController);
 
 // CREATE
-app.post("/movies", (req, res) => {
-  // {title: string, year: number}
-  const addMovieSchema = Joi.object({
-    title: Joi.string().required(),
-    year: Joi.number().required(),
-  });
+app.post("/movies", validate(movieSchema), addMovieController);
 
-  const { value, error } = addMovieSchema.validate(req.body);
-  if (error) {
-    return res.status(400).json({
-      message: error.details.map((d) => d.message),
-    });
-  }
+// UPDATE
+app.put("/movies/:id", validate(movieSchema), updateMovieController);
 
-  const movie = addMovie(value);
-  res.send(movie);
-});
+// 404 handler
+app.use(notfound);
+
+// error handler middleware
+app.use(errorHandler);
 
 app.listen(config.appPort, () => {
   console.log(`Server running on ${config.appPort}`);
