@@ -16,6 +16,7 @@ const {
   getAllMoviesController,
   addMovieController,
   updateMovieController,
+  deleteMovieController,
 } = require("./controllers/movie.controller");
 
 const app = express();
@@ -31,6 +32,9 @@ app.post("/movies", validate(movieSchema), addMovieController);
 
 // UPDATE
 app.put("/movies/:id", validate(movieSchema), updateMovieController);
+
+// DELETE
+app.delete("/movies/:id", deleteMovieController);
 
 // 404 handler
 app.use(notfound);

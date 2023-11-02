@@ -28,8 +28,20 @@ const updateMovie = ({ id, payload }) => {
   return movies[idx];
 };
 
+const deleteMovie = ({ id }) => {
+  const idx = movies.findIndex((m) => m.id == id);
+  if (idx === -1) {
+    return null;
+  }
+
+  const movie = movies[idx];
+  movies.splice(idx, 1);
+  return movie;
+};
+
 module.exports = {
   getAllMovies,
   addMovie,
   updateMovie,
+  deleteMovie,
 };
